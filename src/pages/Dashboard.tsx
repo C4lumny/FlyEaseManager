@@ -6,7 +6,7 @@ import { Nav } from "@/components/nav";
 
 export const Dashboard = () => {
   return (
-    <div className="container relative hidden h-[800px] flex-col md:grid lg:max-w-none lg:grid-cols-6 lg:px-0">
+    <div className="container relative hidden h-screen flex-col md:grid lg:max-w-none lg:grid-cols-6 lg:px-0">
       <div className="col-span-1 flex flex-col">
         {/* 👇 Logo del aplicativo */}
         <div className="mt-10">
@@ -64,7 +64,7 @@ export const Dashboard = () => {
           
         </div>
       </div>
-      <div className="col-span-5">
+      <div className="">
           <Separator orientation="vertical" />
         </div>
       <div className="ml-10 col-span-5"></div>
