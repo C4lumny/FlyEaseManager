@@ -1,13 +1,11 @@
 // UI ImportS 👇
 import { UserAuthForm } from "@/components/user-auth-form";
 import { ModeToggle } from "@/components/mode-toggle";
-
 // Icons and images 👇
 import FlyEaseLogo from "@/assets/Logo-removebg-preview.png";
 import PlaneLanding from "@/assets/plane_landing.jpeg";
 
 export const Login = () => {
-
   return (
     <>
       {/* Lado izquierdo de la pagina (imagen) 👇 */}

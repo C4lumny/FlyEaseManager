@@ -1,5 +1,5 @@
 import { Login } from "./pages/Login";
-import { Dashboard } from "./pages/Dashboard";
+import { Home } from "./pages/Home";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 
@@ -12,7 +12,7 @@ export const App = () => {
         {/* 👇 Ruta del login */}
         <Route path="/login" element={<Login />} />
         {/* 👇 Ruta del dashboard */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/home/*" element={<Home />} />
       </Routes>
     </ThemeProvider>
   );

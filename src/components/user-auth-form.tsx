@@ -2,7 +2,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useRequest } from "@/hooks/useApiRequest";
-
+import { useUserContext } from "@/contexts/userProvider";
 // UI imports 👇
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,10 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [loginError, setLoginError] = React.useState<boolean>(false);
   const [credentials, setCredentials] = useState({ usuario: "", clave: "" });
   const { apiRequest } = useRequest();
+  const { createUser } = useUserContext();
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,10 +41,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
       if (apiResponse.succes === true) {
         setIsLoading(false);
-        navigate("/dashboard");
+        createUser({ username: credentials.usuario, password: credentials.clave });
+        navigate("/home/dashboard");
       }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      setLoginError(true);
     }
   };
 
@@ -79,6 +83,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               onChange={handleChange}
             />
           </div>
+          {/* TODO: Cuando el usuario vuelva a escribir, quitar este texto */}
+          <div className={`text-red-500 font-semibold my-2${!loginError ? " hidden" : ""}`}>Usuario o contraseña incorrectos</div>
           <Button disabled={isLoading}>
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
             Iniciar sesión
