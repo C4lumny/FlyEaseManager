@@ -8,7 +8,7 @@ import PlaneLanding from "@/assets/plane_landing.jpeg";
 export const Login = () => {
   return (
     <>
-      {/* Lado izquierdo de la pagina (imagen) 👇 */}
+      {/* Lado izquierdo de la pagina (imagen) 👇 */} //TODO:Colocar Dichos con una fuente diferente y tamaño un poco mas grande, ademas de colocarlos en la mitad procurando que vayan cambiando segun cierto periodo de tiempo a otro aleatorio 
       <div className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="absolute right-4 top-4 md:right-8 md:top-8">
           <ModeToggle />
@@ -30,12 +30,12 @@ export const Login = () => {
           </div>
           M
         </div>
-        {/* Parte derecha de la pagina (Inicio de sesion) 👇 */}
+        {/* Parte derecha de la pagina (Inicio de sesion) 👇 */}  //TODO:Hacer la verificacion de Usuario y contraseña, si es erroneo mostrar un mensaje de inicio de sesion
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <div className="flex flex-col space-y-2 text-center">
               <h1 className="text-2xl font-semibold tracking-tight">Iniciar sesión</h1>
-              <p className="text-sm text-muted-foreground">Ingresa tu usuario y contraseña</p>
+              <p className="text-sm text-muted-foreground">Ingresa tu usuario y contraseña</p> 
             </div>
             <UserAuthForm />
           </div>
