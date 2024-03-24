@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Nav } from "@/components/nav";
 import { ModeToggle } from "@/components/mode-toggle";
+import { AirportsPage } from "./airports/page";
 
 export const Home = () => {
   const location = useLocation();
@@ -97,12 +98,11 @@ export const Home = () => {
           <Separator orientation="vertical" />
         </div>
       </div>
-      <div className="ml-10 col-span-4">
+      <div className="ml-10 col-span-4 p-10">
         <Routes>
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="flights" element={<DashboardPage />} />
-          <Route path="airports" element={<DashboardPage />} />
-          <Route path="airports" element={<DashboardPage />} />
+          <Route path="dashboard/*" element={<DashboardPage />} />
+          <Route path="flights/*" element={<DashboardPage />} />
+          <Route path="airports/*" element={<AirportsPage />} />
         </Routes>
       </div>
     </div>
