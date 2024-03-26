@@ -25,7 +25,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (user.username === "" && user.password === "") {
-      navigate('/login');
+      navigate('/');
     }
   }, [user, history]);
 
