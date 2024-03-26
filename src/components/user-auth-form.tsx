@@ -25,6 +25,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       ...credentials,
       [e.target.name]: e.target.value,
     });
+    {/* Quita el mensaje de error "Usuario o contraseña incorrectos" cuando se altera el cuadro Usuario o Contraseña */}
+    setLoginError(false)
   };
 
   const onSubmit = async (event: React.SyntheticEvent) => {
@@ -54,8 +56,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     <div className={cn("grid gap-6", className)} {...props}>
       <form onSubmit={onSubmit}>
         <div className="grid gap-2">
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="user">
+          <div className="grid gap-1 border border-black dark:border-none rounded-lg">
+            <Label className="sr-only " htmlFor="user">
               Usuario
             </Label>
             <Input
@@ -64,18 +66,18 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               placeholder="VictorTorrres"
               autoCapitalize="none"
               autoCorrect="off"
-              // disabled={isLoading}
-              onChange={handleChange}
+              //disabled={isLoading}
+              onChange={handleChange}            
             />
           </div>
-          <div className="grid gap-1">
+          <div className="grid gap-1 border border-black dark:border-none rounded-lg">
             <Label className="sr-only" htmlFor="password">
               Contraseña
             </Label>
             <Input
               id="password"
               name="clave"
-              placeholder="**************"
+              placeholder="•••••••••••••"
               type="password"
               autoCapitalize="none"
               autoCorrect="off"
@@ -83,7 +85,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               onChange={handleChange}
             />
           </div>
-          {/* TODO: Cuando el usuario vuelva a escribir, quitar este texto */}
           <div className={`text-red-500 font-semibold my-2${!loginError ? " hidden" : ""}`}>Usuario o contraseña incorrectos</div>
           <Button disabled={isLoading}>
             {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
