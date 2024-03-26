@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const baseURL = "http://flyeaseapi-dev-env.eba-sbxyzdge.us-east-2.elasticbeanstalk.com"
+const baseURL = "https://flyeasemanager.site"
 
 export const flyEaseApi = axios.create({
-  baseURL: "http://flyeaseapi-dev-env.eba-sbxyzdge.us-east-2.elasticbeanstalk.com/",
+  baseURL: "https://flyeasemanager.site/",
   headers: {
     "Content-Type": "application/json",
   },
