@@ -4,6 +4,8 @@ import { Plus, Minus, RefreshCcw, View } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Nav } from "@/components/nav";
 import { ViewRegions } from "./components/view";
+import { CreateRegions } from "./components/create";
+import { DeleteRegion } from "./components/delete";
 // import { ViewCountries } from "./components/view";
 // import { CreateCountries } from "./components/create";
 
@@ -56,10 +58,10 @@ export const RegionsPage = () => {
         <div className="flex-1 lg:max-w-4xl my-10">
           <div className="space-y-6">
             <Routes>
-              <Route path="view" element= {<ViewRegions />}/>
-              <Route path="create" element={<div>Hola mundo actualizar</div>} />
+              <Route path="view" element={<ViewRegions />} />
+              <Route path="create" element={<CreateRegions />} />
               <Route path="update" element={<div>Hola mundo actualizar</div>} />
-              <Route path="delete" element={<div>Hola mundo eliminar</div>} />
+              <Route path="delete" element={<DeleteRegion />} />
             </Routes>
           </div>
         </div>
