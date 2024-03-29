@@ -6,6 +6,7 @@ import { Nav } from "@/components/nav";
 import { ViewRegions } from "./components/view";
 import { CreateRegions } from "./components/create";
 import { DeleteRegion } from "./components/delete";
+import { UpdateRegions } from "./components/update";
 // import { ViewCountries } from "./components/view";
 // import { CreateCountries } from "./components/create";
 
@@ -60,7 +61,7 @@ export const RegionsPage = () => {
             <Routes>
               <Route path="view" element={<ViewRegions />} />
               <Route path="create" element={<CreateRegions />} />
-              <Route path="update" element={<div>Hola mundo actualizar</div>} />
+              <Route path="update" element={<UpdateRegions />} />
               <Route path="delete" element={<DeleteRegion />} />
             </Routes>
           </div>

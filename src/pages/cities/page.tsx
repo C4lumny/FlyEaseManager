@@ -4,6 +4,7 @@ import { Plus, Minus, RefreshCcw, View } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Nav } from "@/components/nav";
 import { ViewCities } from "./components/view";
+import { CreateCities } from "./components/create";
 
 export const CitiesPage = () => {
   const location = useLocation();
@@ -55,7 +56,7 @@ export const CitiesPage = () => {
           <div className="space-y-6">
             <Routes>
               <Route path="view" element= {<ViewCities />}/>
-              <Route path="create" element={<div>Hola mundo actualizar</div>} />
+              <Route path="create" element={<CreateCities />} />
               <Route path="update" element={<div>Hola mundo actualizar</div>} />
               <Route path="delete" element={<div>Hola mundo eliminar</div>} />
             </Routes>

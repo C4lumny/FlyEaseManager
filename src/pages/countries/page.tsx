@@ -5,6 +5,8 @@ import { Separator } from "@/components/ui/separator";
 import { Nav } from "@/components/nav";
 import { ViewCountries } from "./components/view";
 import { CreateCountries } from "./components/create";
+import { UpdateCountries } from "./components/update";
+import { DeleteCountry } from "./components/delete";
 
 export const CountriesPage = () => {
   const location = useLocation();
@@ -57,8 +59,8 @@ export const CountriesPage = () => {
             <Routes>
               <Route path="view" element= {<ViewCountries />}/>
               <Route path="create" element={<CreateCountries />} />
-              <Route path="update" element={<div>Hola mundo actualizar</div>} />
-              <Route path="delete" element={<div>Hola mundo eliminar</div>} />
+              <Route path="update" element={<UpdateCountries />} />
+              <Route path="delete" element={<DeleteCountry />} />
             </Routes>
           </div>
         </div>

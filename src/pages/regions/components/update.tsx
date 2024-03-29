@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { useRequest } from "@/hooks/useApiRequest";
@@ -9,7 +9,6 @@ import { useGet } from "@/hooks/useGet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import {
   Sheet,
@@ -33,27 +32,55 @@ import {
 import { RefreshCcwDot } from "lucide-react";
 import { DataTable } from "@/components/viewTable";
 
-export const UpdateStudents = () => {
-  const { data, loading } = useGet("students");
-  const parentsData = useGet("parents");
-  const coursesData = useGet("courses");
+export const UpdateRegions = () => {
+  const { data, loading } = useGet("/FlyEaseApi/Regiones/GetAll");
+  const countriesData = useGet("/FlyEaseApi/Paises/GetAll");
   const [filter, setFilter] = useState("");
   const { apiRequest } = useRequest();
+  const columnTitles = ["Id de la region", "Nombre de la region", "Nombre del pais", "Fecha de registro"];
+  let dataTable: string[] = [];
+  let filteredData: string[] = [];
+
+  const formSchema = z.object({
+    nombre: z.string().min(2, {
+      message: "country must be at least 2 characters.",
+    }),
+    pais: z.string({
+      required_error: "Please select a country to display.",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      nombre: "",
+    },
+  });
 
   const handleFilterChange = (event: any) => {
     setFilter(event.target.value);
   };
 
-  const handleUpdateClick = (updatedStudent, student) => {
-    const data = { updatedStudent, student };
-    console.log(data);
-    // apiRequest(data, "students", "PUT");
+  const handleUpdateClick = async (updatedRegion: any, region: any) => {
+    const regionToUpdate = {
+      idregion: region.idregion,
+      nombre: updatedRegion.nombre,
+      fecharegistro: region.fecharegistro,
+      pais: {
+        idpais: parseInt(updatedRegion.pais.split(",")[0]),
+        nombre: updatedRegion.pais.split(",")[1],
+        fecharegistro: region.pais.fecharegistro,
+      },
+    };
+    await apiRequest(regionToUpdate, `/FlyEaseApi/Regiones/Put/${region.idregion}`, "put");
   };
 
-  let dataTable: string[] = [];
-  let filteredData: string[] = [];
+  const handleRefreshClick = (region: any) => {
+    form.setValue("nombre", region.nombre);
+    form.setValue("pais", `${region.pais.idpais},${region.pais.nombre}`);
+  };
+
   if (!loading) {
-    console.log(data.response);
     dataTable = data.response.map(
       (item: any) =>
         ({
@@ -64,49 +91,24 @@ export const UpdateStudents = () => {
           sheet: (
             <Sheet>
               <SheetTrigger>
-                <RefreshCcwDot className="cursor-pointer" onClick={() => handleRefreshClick(student)} />
+                <RefreshCcwDot className="cursor-pointer" onClick={() => handleRefreshClick(item)} />
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>Actualizar estudiante</SheetTitle>
+                  <SheetTitle>Actualizar region</SheetTitle>
                 </SheetHeader>
                 <div className="grid gap-5 py-4">
                   <Form {...form}>
                     <form
                       className="space-y-4"
-                      onSubmit={form.handleSubmit((updatedSubject) => handleUpdateClick(updatedSubject, student))}
+                      onSubmit={form.handleSubmit((updatedSubject) => handleUpdateClick(updatedSubject, item))}
                     >
-                      {/* 👇 Espacio para el select de tipos documento */}
                       <FormField
                         control={form.control}
-                        name="document_type"
+                        name="nombre"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Tipo de documento</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger className="w-[280px]">
-                                  <SelectValue placeholder="Seleccione un profesor" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectItem value="1">Cedula</SelectItem>
-                                  <SelectItem value="2">Pasaporte</SelectItem>
-                                  <SelectItem value="3">Tarjeta de identidad</SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="identificacion"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Identificacion</FormLabel>
+                            <FormLabel>Nombre</FormLabel>
                             <FormControl>
                               <Input placeholder="Nro de documento" {...field} />
                             </FormControl>
@@ -114,136 +116,35 @@ export const UpdateStudents = () => {
                           </FormItem>
                         )}
                       />
-                      {/* 👇 Espacio para el input de la descripcion */}
+                      {/* 👇 Espacio para el select de paises */}
                       <FormField
                         control={form.control}
-                        name="nombres"
+                        name="pais"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Nombres</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Nathan David" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {/* 👇 Espacio para el input de apellidos */}
-                      <FormField
-                        control={form.control}
-                        name="apellidos"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Apellidos</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Ospino Hernandez" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {/* 👇 Espacio para el input de usuario */}
-                      <FormField
-                        control={form.control}
-                        name="user"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Usuario</FormLabel>
-                            <FormControl>
-                              <Input placeholder="nathan_student" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {/* 👇 Espacio para el input de contraseña actual */}
-                      <FormField
-                        control={form.control}
-                        name="old_password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Contraseña actual</FormLabel>
-                            <FormControl>
-                              <Input placeholder="***********" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {/* 👇 Espacio para el input de contraseña actual */}
-                      <FormField
-                        control={form.control}
-                        name="new_password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nueva contraseña</FormLabel>
-                            <FormControl>
-                              <Input placeholder="***********" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {/* 👇 Espacio para el select de acudientes */}
-                      <FormField
-                        control={form.control}
-                        name="associated_parent"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Acudiente asignado al estudiante</FormLabel>
+                            <FormLabel>Pais asignado a la región</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger className="w-[280px]">
-                                  <SelectValue placeholder="Seleccione un acudiente" />
+                                  <SelectValue placeholder="Seleccione un pais" />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
                                 <SelectGroup>
-                                  <SelectLabel>Acudientes</SelectLabel>
-                                  {parentsData.data.data.length > 0 ? (
-                                    parentsData.data.data.map((parent) => {
+                                  <SelectLabel>Paises</SelectLabel>
+                                  {countriesData.data.response.length > 0 ? (
+                                    countriesData.data.response.map((country: any) => {
                                       return (
-                                        <SelectItem key={parent.cedula} value={parent.cedula}>
-                                          {parent.cedula} - {parent.nombres} {parent.apellidos}
+                                        <SelectItem
+                                          key={country.idpais.toString()}
+                                          value={`${country.idpais},${country.nombre}`}
+                                        >
+                                          {country.nombre}
                                         </SelectItem>
                                       );
                                     })
                                   ) : (
-                                    <div>No hay acudientes activos</div>
-                                  )}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      {/* 👇 Espacio para el select de cursos  */}
-                      <FormField
-                        control={form.control}
-                        name="associated_course"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Curso en los cuales la asignatura será dictada</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger className="w-[280px]">
-                                  <SelectValue placeholder="Seleccione un curso" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectLabel>Cursos</SelectLabel>
-                                  {coursesData.data.data.length > 0 ? (
-                                    coursesData.data.data.map((course) => {
-                                      return (
-                                        <SelectItem key={course.id} value={course.id}>
-                                          {course.id}
-                                        </SelectItem>
-                                      );
-                                    })
-                                  ) : (
-                                    <div>No hay profesores activos</div>
+                                    <div>No hay paises registrados</div>
                                   )}
                                 </SelectGroup>
                               </SelectContent>
@@ -268,20 +169,6 @@ export const UpdateStudents = () => {
 
     filteredData = dataTable.filter((item: any) => item.idregion.toString().includes(filter));
   }
-
-  const schema = z.object({});
-
-  const form = useForm({ resolver: yupResolver(schema) });
-
-//   const handleRefreshClick = (student) => {
-//     form.setValue("identificacion", student.identificacion);
-//     form.setValue("nombres", student.nombres);
-//     form.setValue("apellidos", student.apellidos);
-//     form.setValue("user", student.usuario);
-//   };
-
-  const columnTitles = ["Id de la region", "Nombre de la region", "Nombre del pais", "Fecha de registro"];
-
   return (
     <div>
       {loading ? (
@@ -295,10 +182,8 @@ export const UpdateStudents = () => {
       ) : (
         <div className="space-y-5">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">Actualizar estudiantes</h1>
-            <p className="text-muted-foreground">
-              Aquí puedes ver a los profesores activos en tu institución, sus cursos, etc.
-            </p>
+            <h1 className="text-xl font-semibold tracking-tight">Actualizar region</h1>
+            <p className="text-muted-foreground">Aquí puedes actualizar a las regiones.</p>
           </div>
           <Separator className="my-5" />
           <div className="flex items-center py-4">

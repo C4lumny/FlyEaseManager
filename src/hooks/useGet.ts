@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { flyEaseApi } from "@/lib/api";
 
 export function useGet(endpoint: string) {
@@ -6,7 +6,7 @@ export function useGet(endpoint: string) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<any>();
 
-  useEffect(() => {
+  const fetch = useCallback(() => {
     setLoading(true);
     flyEaseApi
       .get(endpoint)
@@ -20,5 +20,9 @@ export function useGet(endpoint: string) {
       });
   }, [endpoint]);
 
-  return { data, loading, error };
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  return { data, loading, error, mutate: fetch };
 }

@@ -9,11 +9,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/viewTable";
 
-export const DeleteRegion = () => {
-  const { data, loading } = useGet("/FlyEaseApi/Regiones/GetAll");
+export const DeleteCountry = () => {
+  const { data, loading, mutate } = useGet("/FlyEaseApi/Paises/GetAll");
   const { apiRequest } = useRequest();
   const [filter, setFilter] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState<number>();
+  const [selectedCountry, setSelectedCountry] = useState<number>();
   let dataTable: string[] = [];
   let filteredData: string[] = [];
 
@@ -22,40 +22,37 @@ export const DeleteRegion = () => {
     dataTable = data.response.map(
       (item: any) =>
         ({
-          idregion: item.idregion,
+          idpais: item.idpais,
           nombre: item.nombre,
-          nombrePais: item.pais.nombre,
           fechaRegistro: new Date(item.fecharegistro).toLocaleString(),
           deleteCheckbox: (
             <Checkbox
-              checked={item.idregion === selectedRegion}
+              checked={item.idpais === selectedCountry}
               className="w-4 h-4"
-              onCheckedChange={() => handleCheckboxChange(item.idregion)}
+              onCheckedChange={() => handleCheckboxChange(item.idpais)}
             />
-            // <Checkbox className="w-4 h-4" />
           ),
         } || [])
     );
 
-    filteredData = dataTable.filter((item: any) => item.idregion.toString().includes(filter));
+    filteredData = dataTable.filter((item: any) => item.idpais.toString().includes(filter));
   }
 
-  const columnTitles = ["Id de la region", "Nombre de la region", "Nombre del pais", "Fecha de registro"];
+  const columnTitles = ["Id del pais", "Nombre del pais", "Fecha de registro"];
 
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFilter(event.currentTarget.value);
   };
 
-  const handleCheckboxChange = (idregion: number) => {
-    setSelectedRegion(idregion);
+  const handleCheckboxChange = (idpais: number) => {
+    setSelectedCountry(idpais);
   };
 
   const handleDeleteClick = async () => {
-    const idregion = selectedRegion;
-    await apiRequest(null, `/FlyEaseApi/Regiones/Delete/${idregion}`, "delete");
+    const idregion = selectedCountry;
+    await apiRequest(null, `/FlyEaseApi/Paises/Delete/${idregion}`, "delete");
+    mutate();
   };
-
-//TODO: implementar un toaster (se encuentra en shadcn-ui) para mostrar un mensaje de exito o error al eliminar una region, y actualizar la tabla de regiones despues de eliminar una region
 
   return (
     <div>
@@ -70,8 +67,8 @@ export const DeleteRegion = () => {
       ) : (
         <div className="space-y-5">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">Eliminar regiones</h1>
-            <p className="text-muted-foreground">Aquí puedes eliminar las regiones.</p>
+            <h1 className="text-xl font-semibold tracking-tight">Eliminar pais</h1>
+            <p className="text-muted-foreground">Aquí puedes eliminar paises.</p>
           </div>
           <Separator className="my-5" />
           <div className="flex items-center py-4">
@@ -87,7 +84,7 @@ export const DeleteRegion = () => {
           </div>
           <div className="flex w-full justify-end">
             <Button onClick={handleDeleteClick} variant="destructive">
-              Borrar region
+              Borrar pais
             </Button>
           </div>
         </div>
