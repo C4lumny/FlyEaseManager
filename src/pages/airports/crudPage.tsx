@@ -1,11 +1,16 @@
-import { Routes, Route } from "react-router-dom";
-
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ViewAirports } from "./components/view";
 import { Plus, Minus, RefreshCcw, View } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Nav } from "@/components/nav";
+import { CreateAirports } from "./components/create";
+import { DeleteAirport } from "./components/delete";
+import { UpdateAirports } from "./components/update";
 
 export const AirportsCrudPage = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
     <>
       <div className="space-y-2 mb-5">
@@ -21,25 +26,25 @@ export const AirportsCrudPage = () => {
                 icon: View,
                 title: "Visualizar",
                 link: "view",
-                variant: "default",
+                variant: currentPath === "/home/airports/view" ? "default" : "ghost",
               },
               {
                 icon: Plus,
                 title: "Crear",
                 link: "create",
-                variant: "ghost",
+                variant: currentPath === "/home/airports/create" ? "default" : "ghost",
               },
               {
                 icon: RefreshCcw,
                 title: "Actualizar",
                 link: "update",
-                variant: "ghost",
+                variant: currentPath === "/home/airports/update" ? "default" : "ghost",
               },
               {
                 icon: Minus,
                 title: "Eliminar",
                 link: "delete",
-                variant: "ghost",
+                variant: currentPath === "/home/airports/delete" ? "default" : "ghost",
               },
             ]}
           />
@@ -52,9 +57,9 @@ export const AirportsCrudPage = () => {
           <div className="space-y-6">
             <Routes>
               <Route path="view" element={<ViewAirports />} />
-              <Route path="create" element={<div>Hola mundo crear</div>} />
-              <Route path="update" element={<div>Hola mundo actualizar</div>} />
-              <Route path="delete" element={<div>Hola mundo eliminar</div>} />
+              <Route path="create" element={<CreateAirports />} />
+              <Route path="update" element={<UpdateAirports />} />
+              <Route path="delete" element={<DeleteAirport />} />
             </Routes>
           </div>
         </div>

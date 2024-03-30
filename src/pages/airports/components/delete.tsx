@@ -8,14 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/viewTable";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Image } from "lucide-react";
 
-export const DeleteCity = () => {
-  const { data, loading, mutate } = useGet("/FlyEaseApi/Ciudades/GetAll");
+export const DeleteAirport = () => {
+  const { data, loading, mutate } = useGet("/FlyEaseApi/Aeropuertos/GetAll");
   const { apiRequest } = useRequest();
   const [filter, setFilter] = useState("");
-  const [selectedCity, setSelectedCity] = useState<number>();
+  const [selectedAirport, setSelectedAirport] = useState<number>();
   let dataTable: string[] = [];
   let filteredData: string[] = [];
 
@@ -25,48 +23,38 @@ export const DeleteCity = () => {
         ({
           deleteCheckbox: (
             <Checkbox
-              checked={item.idciudad === selectedCity}
+              checked={item.idaereopuerto === selectedAirport}
               className="w-4 h-4"
-              onCheckedChange={() => handleCheckboxChange(item.idciudad)}
+              onCheckedChange={() => handleCheckboxChange(item.idaereopuerto)}
             />
             // <Checkbox className="w-4 h-4" />
           ),
-          idciudad: item.idciudad,
+          idaereopuerto: item.idaereopuerto,
           nombre: item.nombre,
-          nombreRegion: item.region.nombre,
+          latitud: item.coordenadas.latitud,
+          longitud: item.coordenadas.longitud,
+          nombreCiudad: item.ciudad.nombre,
           fechaRegistro: new Date(item.fecharegistro).toLocaleString(),
-          imagen: (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Image className="cursor-pointer" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <img className="w-96 h-72" src={`data:image/jpeg;base64,${item.imagen}`} />
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ),
         } || [])
     );
 
     console.log(dataTable);
-    filteredData = dataTable.filter((item: any) => item.nombre.toString().includes(filter));
+    filteredData = dataTable.filter((item: any) => item.idaereopuerto.toString().includes(filter));
   }
 
-  const columnTitles = ["","Id de la ciudad", "Nombre de la ciudad", "Nombre de la region", "Fecha de registro"];
+  const columnTitles = ["", "Id", "Nombre", "Latitud", "Longitud", "Ciudad", "Fecha de registro"];
 
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFilter(event.currentTarget.value);
   };
 
   const handleCheckboxChange = (idciudad: number) => {
-    setSelectedCity(idciudad);
+    setSelectedAirport(idciudad);
   };
 
   const handleDeleteClick = async () => {
-    const idciudad = selectedCity;
-    await apiRequest(null, `/FlyEaseApi/Ciudades/Delete/${idciudad}`, "delete");
+    const idciudad = selectedAirport;
+    await apiRequest(null, `/FlyEaseApi/Aeropuertos/Delete/${idciudad}`, "delete");
     mutate();
   };
 
@@ -85,8 +73,8 @@ export const DeleteCity = () => {
       ) : (
         <div className="space-y-5">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">Eliminar ciudades</h1>
-            <p className="text-muted-foreground">Aquí puedes eliminar las ciudades.</p>
+            <h1 className="text-xl font-semibold tracking-tight">Eliminar aeropuertos</h1>
+            <p className="text-muted-foreground">Aquí puedes eliminar los aeropuertos.</p>
           </div>
           <Separator className="my-5" />
           <div className="flex items-center py-4">
@@ -102,7 +90,7 @@ export const DeleteCity = () => {
           </div>
           <div className="flex w-full justify-end">
             <Button onClick={handleDeleteClick} variant="destructive">
-              Borrar ciudad
+              Borrar aeropuerto
             </Button>
           </div>
         </div>

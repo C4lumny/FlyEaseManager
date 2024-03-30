@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Nav } from "@/components/nav";
 import { ModeToggle } from "@/components/mode-toggle";
 import { AirportsPage } from "./airports/page";
+import { FlightsPage } from "./flights/page";
 
 export const Home = () => {
   const location = useLocation();
@@ -101,7 +102,7 @@ export const Home = () => {
       <div className="ml-10 col-span-4 p-10">
         <Routes>
           <Route path="dashboard/*" element={<DashboardPage />} />
-          <Route path="flights/*" element={<DashboardPage />} />
+          <Route path="flights/*" element={<FlightsPage />} />
           <Route path="airports/*" element={<AirportsPage />} />
         </Routes>
       </div>

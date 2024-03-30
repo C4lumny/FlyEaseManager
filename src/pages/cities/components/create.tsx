@@ -2,7 +2,6 @@ import { useGet } from "@/hooks/useGet";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useState } from "react";
 import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
@@ -59,7 +58,7 @@ export const CreateCities = () => {
         },
       },
     };
-    // await apiRequest(cityData, "/FlyEaseApi/Ciudades/Post", "post");
+    await apiRequest(cityData, "/FlyEaseApi/Ciudades/Post", "post");
   };
 
   return (
