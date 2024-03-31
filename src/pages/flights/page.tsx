@@ -1,9 +1,12 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 // import { ViewAirports } from "./components/view";
 import { Plus, Minus, RefreshCcw, View } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Nav } from "@/components/nav";
 import { ViewFlights } from "./components/view";
+import { DeleteFlight } from "./components/delete";
+import { CreateFlights } from "./components/create";
 // import { CreateAirports } from "./components/create";
 // import { DeleteAirport } from "./components/delete";
 // import { UpdateAirports } from "./components/update";
@@ -11,6 +14,11 @@ import { ViewFlights } from "./components/view";
 export const FlightsPage = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("view");
+  }, []);
 
   return (
     <>
@@ -58,9 +66,9 @@ export const FlightsPage = () => {
           <div className="space-y-6">
             <Routes>
               <Route path="view" element={<ViewFlights />} />
-              <Route path="create" element={<div>Hola mundo crear</div>} />
+              <Route path="create" element={<CreateFlights />} />
               <Route path="update" element={<div>Hola mundo actualizar</div>} />
-              <Route path="delete" element={<div>Hola mundo eliminar</div>} />
+              <Route path="delete" element={<DeleteFlight />} />
             </Routes>
           </div>
         </div>

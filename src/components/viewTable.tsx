@@ -7,7 +7,7 @@ interface DataTableProps {
 }
 
 export const DataTable: React.FC<DataTableProps> = ({ columnTitles, data }) => (
-  <div className="rounded-md border overflow-scroll h-96">
+  <div className="rounded-md border overflow-auto h-96">
     <Table>
       <TableHeader>
         <TableRow>

@@ -35,7 +35,7 @@ export const Home = () => {
       <div className="absolute right-4 top-4 md:right-8 md:top-8">
         <ModeToggle />
       </div>
-      <div className="col-span-1 flex flex-col">
+      <div className="h-screen w-64 fixed left-0 col-span-1 flex flex-col">
         {/* 👇 Logo del aplicativo */}
         <div className="mt-10">
           <img src={FlyEaseIcon} alt="" />
@@ -99,7 +99,7 @@ export const Home = () => {
           <Separator orientation="vertical" />
         </div>
       </div>
-      <div className="ml-10 col-span-4 p-10">
+      <div className="ml-64 col-span-6 p-10">
         <Routes>
           <Route path="dashboard/*" element={<DashboardPage />} />
           <Route path="flights/*" element={<FlightsPage />} />

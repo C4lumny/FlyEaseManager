@@ -1,22 +1,45 @@
 import { ChangeEvent, useState } from "react";
+import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/viewTable";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
-export const ViewFlights = () => {
-  const { data, loading } = useGet("/FlyEaseApi/Vuelos/GetAll");
+export const DeleteFlight = () => {
+  const { data, loading, mutate } = useGet("/FlyEaseApi/Vuelos/GetAll");
   const [filter, setFilter] = useState<string>("");
+  const { apiRequest } = useRequest();
+  const [selectedFlight, setSelectedFlight] = useState<number>();
   let dataTable: string[] = [];
   let filteredData: string[] = [];
+
+  const handleCheckboxChange = (idvuelo: number) => {
+    setSelectedFlight(idvuelo);
+  };
+
+  const handleDeleteClick = async () => {
+    const idvuelo = selectedFlight;
+    await apiRequest(null, `/FlyEaseApi/Vuelos/Delete/${idvuelo}`, "delete");
+    mutate();
+  };
 
   if (!loading) {
     console.log(data.response);
     dataTable = data.response.map(
       (item: any) =>
         ({
+          deleteCheckbox: (
+            <Checkbox
+              checked={item.idvuelo === selectedFlight}
+              className="w-4 h-4"
+              onCheckedChange={() => handleCheckboxChange(item.idvuelo)}
+            />
+            // <Checkbox className="w-4 h-4" />
+          ),
           idvuelo: item.idvuelo,
           precio: item.preciovuelo,
           tarifa: item.tarifatemporada,
@@ -70,8 +93,8 @@ export const ViewFlights = () => {
       ) : (
         <div>
           <div>
-            <h1 className="text-xl font-semibold tracking-tight">Visualizar vuelos</h1>
-            <p className="text-muted-foreground">Aqui puedes ver los vuelos activos.</p>
+            <h1 className="text-xl font-semibold tracking-tight">Borrar vuelos</h1>
+            <p className="text-muted-foreground">Aqui puedes borrar los vuelos activos.</p>
           </div>
           <Separator className="my-5" />
           <div className="flex items-center py-4">
@@ -79,6 +102,11 @@ export const ViewFlights = () => {
           </div>
           <div className="rounded-md border">
             <DataTable data={filteredData} columnTitles={columnTitles} />
+          </div>
+          <div className="mt-5 flex w-full justify-end">
+            <Button onClick={handleDeleteClick} variant="destructive">
+              Borrar vuelo
+            </Button>
           </div>
         </div>
       )}
