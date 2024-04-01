@@ -17,9 +17,7 @@ export const CreateCountries = () => {
   const { apiRequest } = useRequest();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Aquí puedes manejar el envío del formulario, por ejemplo, enviando los datos a un servidor
-    const { apiData } = await apiRequest(values, "/FlyEaseApi/Paises/Post", "post");
-    console.log(apiData);
+    await apiRequest(values, "/FlyEaseApi/Paises/Post", "post");
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -27,15 +25,13 @@ export const CreateCountries = () => {
     defaultValues: {
       nombre: "",
     },
-  })
+  });
 
   return (
     <>
       <div>
         <h1 className="text-xl font-semibold tracking-tight">Crear paises</h1>
-        <p className="text-muted-foreground">
-          Aqui puedes crear los paises que desees.
-        </p>
+        <p className="text-muted-foreground">Aqui puedes crear los paises que desees.</p>
       </div>
       <Separator className="mt-8" />
       <Form {...form}>

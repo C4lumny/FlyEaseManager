@@ -12,6 +12,7 @@ import { Nav } from "@/components/nav";
 import { ModeToggle } from "@/components/mode-toggle";
 import { AirportsPage } from "./airports/page";
 import { FlightsPage } from "./flights/page";
+import { PlanesPage } from "./planes/page";
 
 export const Home = () => {
   const location = useLocation();
@@ -104,6 +105,7 @@ export const Home = () => {
           <Route path="dashboard/*" element={<DashboardPage />} />
           <Route path="flights/*" element={<FlightsPage />} />
           <Route path="airports/*" element={<AirportsPage />} />
+          <Route path="planes/*" element={<PlanesPage />} />
         </Routes>
       </div>
     </div>
