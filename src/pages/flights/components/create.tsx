@@ -33,7 +33,7 @@ const formSchema = z
       .date({ required_error: "Seleccione una fecha" })
       .min(new Date(), { message: "No puede seleccionar una fecha menor a la actual" }),
     horadesalida: z.string().min(4).max(4),
-    tarifa: z.number().min(1),
+    tarifa: z.number().min(0),
     takeoffAirport: z.string({
       required_error: "Seleccione un aeropuerto de despegue.",
     }),
@@ -79,104 +79,18 @@ export const CreateFlights = () => {
       tarifatemporada: values.tarifa,
       descuento: values.descuento,
       cupo: true,
-      fechayhoradesalida: fechasalida.toISOString(),
-      fechayhorallegada: new Date().toISOString(),
+      fechayhoradesalida: fechasalida.toISOString().split("T")[0],
+      fechayhorallegada: new Date().toISOString().split("T")[0],
       avion: (await apiRequest(null, `/FlyEaseApi/Aviones/GetById/${values.avion.split(",")[0]}`, "get")).apiData,
-      aeropuertodespegue: (await apiRequest(
-        null,
-        `/FlyEaseApi/Aeropuertos/GetById/${values.takeoffAirport.split(",")[0]}`,
-        "get"
-      )).apiData,
-      aeropuertodestino: (await apiRequest(
-        null,
-        `/FlyEaseApi/Aeropuertos/GetById/${values.arrivalAirport.split(",")[0]}`,
-        "get"
-      )).apiData,
+      aeropuerto_Despegue: (
+        await apiRequest(null, `/FlyEaseApi/Aeropuertos/GetById/${values.takeoffAirport.split(",")[0]}`, "get")
+      ).apiData,
+      aeropuerto_Destino: (
+        await apiRequest(null, `/FlyEaseApi/Aeropuertos/GetById/${values.arrivalAirport.split(",")[0]}`, "get")
+      ).apiData,
       estado: (await apiRequest(null, `/FlyEaseApi/Estados/GetById/8`, "get")).apiData,
-
-      // avion: {
-      //   idavion: values.avion.split(",")[0],
-      //   nombre: values.avion.split(",")[1],
-      //   modelo: values.avion.split(",")[2],
-      //   fabricante: values.avion.split(",")[3],
-      //   velocidadpromedio: parseFloat(values.avion.split(",")[4]),
-      //   cantidadpasajeros: parseInt(values.avion.split(",")[5]),
-      //   cantidadcarga: parseInt(values.avion.split(",")[6]),
-      //   fecharegistro: values.avion.split(",")[7],
-      //   aerolinea: {
-      //     idaerolinea: parseInt(values.avion.split(",")[8]),
-      //     nombre: values.avion.split(",")[9],
-      //     codigoiata: values.avion.split(",")[10],
-      //     codigoicao: values.avion.split(",")[11],
-      //     fecharegistro: values.avion.split(",")[12],
-      //   },
-      // },
-      // aeropuertodespegue: {
-      //   idaereopuerto: parseInt(values.takeoffAirport.split(",")[0]),
-      //   nombre: values.takeoffAirport.split(",")[1],
-      //   fecharegistro: values.takeoffAirport.split(",")[2],
-      //   ciudad: {
-      //     idciudad: parseInt(values.takeoffAirport.split(",")[3]),
-      //     nombre: values.takeoffAirport.split(",")[4],
-      //     fecharegistro: values.takeoffAirport.split(",")[5],
-      //     imagen: values.takeoffAirport.split(",")[6],
-      //     region: {
-      //       idregion: parseInt(values.takeoffAirport.split(",")[7]),
-      //       nombre: values.takeoffAirport.split(",")[8],
-      //       fecharegistro: values.takeoffAirport.split(",")[9],
-      //       pais: {
-      //         idpais: parseInt(values.takeoffAirport.split(",")[10]),
-      //         nombre: values.takeoffAirport.split(",")[11],
-      //         fecharegistro: values.takeoffAirport.split(",")[12],
-      //       },
-      //     },
-      //   },
-      //   coordenadas: {
-      //     idcoordenada: parseInt(values.takeoffAirport.split(",")[13]),
-      //     latitud: parseFloat(values.takeoffAirport.split(",")[14]),
-      //     longitud: parseFloat(values.takeoffAirport.split(",")[15]),
-      //     fecharegistro: values.takeoffAirport.split(",")[16],
-      //   },
-      // },
-      // aeropuertodestino: {
-      //   idaereopuerto: parseInt(values.arrivalAirport.split(",")[0]),
-      //   nombre: values.arrivalAirport.split(",")[1],
-      //   fecharegistro: values.arrivalAirport.split(",")[2],
-      //   ciudad: {
-      //     idciudad: parseInt(values.arrivalAirport.split(",")[3]),
-      //     nombre: values.arrivalAirport.split(",")[4],
-      //     fecharegistro: values.arrivalAirport.split(",")[5],
-      //     imagen: values.arrivalAirport.split(",")[6],
-      //     region: {
-      //       idregion: parseInt(values.arrivalAirport.split(",")[7]),
-      //       nombre: values.arrivalAirport.split(",")[8],
-      //       fecharegistro: values.arrivalAirport.split(",")[9],
-      //       pais: {
-      //         idpais: parseInt(values.arrivalAirport.split(",")[10]),
-      //         nombre: values.arrivalAirport.split(",")[11],
-      //         fecharegistro: values.arrivalAirport.split(",")[12],
-      //       },
-      //     },
-      //   },
-      //   coordenadas: {
-      //     idcoordenada: parseInt(values.arrivalAirport.split(",")[13]),
-      //     latitud: parseFloat(values.arrivalAirport.split(",")[14]),
-      //     longitud: parseFloat(values.arrivalAirport.split(",")[15]),
-      //     fecharegistro: values.arrivalAirport.split(",")[16],
-      //   },
-      // },
-      // estado: {
-      //   idestado: 8,
-      //   nombre: "Disponible",
-      //   descripcion: "El vuelo y su compra se encuentra completamente disponible",
-      //   fecharegistro: new Date().toISOString(),
-      //   detencion: true,
-      // },
     };
-
-    console.log(flightData);
-    const apiData = await apiRequest(flightData, "/FlyEaseApi/Vuelos/Post", "post");
-    console.log(apiData);
+    await apiRequest(flightData, "/FlyEaseApi/Vuelos/Post", "post");
   };
 
   const handleInputChange = (field: any) => (event: React.ChangeEvent<HTMLInputElement>) => {

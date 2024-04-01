@@ -7,6 +7,7 @@ import { Nav } from "@/components/nav";
 import { ViewFlights } from "./components/view";
 import { DeleteFlight } from "./components/delete";
 import { CreateFlights } from "./components/create";
+import { UpdateFlights } from "./components/update";
 // import { CreateAirports } from "./components/create";
 // import { DeleteAirport } from "./components/delete";
 // import { UpdateAirports } from "./components/update";
@@ -67,7 +68,7 @@ export const FlightsPage = () => {
             <Routes>
               <Route path="view" element={<ViewFlights />} />
               <Route path="create" element={<CreateFlights />} />
-              <Route path="update" element={<div>Hola mundo actualizar</div>} />
+              <Route path="update" element={<UpdateFlights />} />
               <Route path="delete" element={<DeleteFlight />} />
             </Routes>
           </div>
