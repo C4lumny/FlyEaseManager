@@ -200,7 +200,7 @@ export const CreateFlights = () => {
                         </PopoverContent>
                       </Popover>
                     </FormControl>
-                    <FormDescription>El nombre de la ciudad a ingresar.</FormDescription>
+                    <FormDescription>La fecha del vuelo.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -225,7 +225,7 @@ export const CreateFlights = () => {
                         </InputOTPGroup>
                       </InputOTP>
                     </FormControl>
-                    <FormDescription>El descuento del vuelo a ingresar. {"(En horario militar)"}</FormDescription>
+                    <FormDescription>La hora del vuelo. {"(En horario militar)"}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

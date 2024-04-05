@@ -100,7 +100,7 @@ export const UpdateFlights = () => {
     setFilter(event.target.value);
   };
 
-  const handleUpdateClick = async (updatedFlight: any, flight: any) => {
+  const handleUpdateClick = async (updatedFlight: any, flight: any) => {  
     let fechasalida = new Date(updatedFlight.fechadesalida);
     let horadesalida = updatedFlight.horadesalida.substring(0, 2);
     let minutosalida = updatedFlight.horadesalida.substring(2, 4);
