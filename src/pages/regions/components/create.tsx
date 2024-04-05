@@ -31,7 +31,7 @@ export const CreateRegions = () => {
         nombre: values.associatedCountry.split(",")[1],
       },
     };
-    const apiData = await apiRequest(regionData, "/FlyEaseApi/Regiones/Post", "post");
+    await apiRequest(regionData, "/FlyEaseApi/Regiones/Post", "post");
   };
 
   const formSchema = z.object({
