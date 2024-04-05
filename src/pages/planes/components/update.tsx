@@ -283,6 +283,7 @@ export const UpdatePlanes = () => {
                                 {...field}
                                 onChange={handleInputChange(field)}
                                 onBlur={handleInputBlur(field)}
+                                disabled={true}
                               />
                             </FormControl>
                             <FormDescription>La Cantidad de pasajeros del avión a ingresar.</FormDescription>

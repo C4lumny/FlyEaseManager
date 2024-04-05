@@ -13,6 +13,8 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { AirportsPage } from "./airports/page";
 import { FlightsPage } from "./flights/page";
 import { PlanesPage } from "./planes/page";
+import { TicketsPage } from "./tickets/page";
+import { CostumersPage } from "./costumers/page";
 
 export const Home = () => {
   const location = useLocation();
@@ -27,7 +29,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (user.username === "" && user.password === "") {
-      navigate('/');
+      navigate("/");
     }
   }, [user, history]);
 
@@ -83,8 +85,8 @@ export const Home = () => {
               {
                 title: "Clientes",
                 icon: UserRoundPlus,
-                variant: currentPath === "/home/clients" ? "default" : "ghost",
-                link: "clients",
+                variant: currentPath === "/home/costumers" ? "default" : "ghost",
+                link: "costumers",
               },
             ]}
           />
@@ -92,7 +94,7 @@ export const Home = () => {
         {/* 👇 Logout */}
         <div className="mt-auto ml-2 mb-5 flex">
           <Button variant={"outline"} className="font-bold" onClick={handleChange}>
-          <LogOutIcon className="mr-2 size-4" />
+            <LogOutIcon className="mr-2 size-4" />
             Cerrar sesión
           </Button>
         </div>
@@ -106,6 +108,8 @@ export const Home = () => {
           <Route path="flights/*" element={<FlightsPage />} />
           <Route path="airports/*" element={<AirportsPage />} />
           <Route path="planes/*" element={<PlanesPage />} />
+          <Route path="tickets/*" element={<TicketsPage />} />
+          <Route path="costumers/*" element={<CostumersPage />} />
         </Routes>
       </div>
     </div>

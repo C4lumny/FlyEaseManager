@@ -19,41 +19,111 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const formSchema = z.object({
-  // Validaciones para el id
-  idavion: z
-    .string({ required_error: "Por favor ingrese un id" })
-    .min(1, {
-      message: "El id debe tener al menos 1 caracter.",
-    })
-    .max(10, {
-      message: "El id no puede tener mas de 10 caracteres.",
+export interface Asientos {
+  idasiento?: number;
+  posicion: number;
+  disponibilidad: boolean;
+  fecharegistro?: Date;
+  avion: Avion;
+  categoria: Categoria;
+}
+
+interface Avion {
+  idavion: string;
+  nombre: string;
+  modelo: string;
+  fabricante: string;
+  velocidadpromedio: number;
+  cantidadpasajeros: number;
+  cantidadcarga: number;
+  fecharegistro: Date;
+  aereolinea: Aereolinea;
+}
+
+interface Aereolinea {
+  idaereolinea: number;
+  nombre: string;
+  codigoiata: string;
+  codigoicao: string;
+  fecharegistro: Date;
+}
+
+interface Categoria {
+  idcategoria: number;
+  nombre: string;
+  descripcion: string;
+  estadocategoria: boolean;
+  tarifa: number;
+  fecharegistro: Date;
+  comercial: boolean;
+}
+
+const formSchema = z
+  .object({
+    // Validaciones para el id
+    idavion: z
+      .string({ required_error: "Por favor ingrese un id" })
+      .min(1, {
+        message: "El id debe tener al menos 1 caracter.",
+      })
+      .max(10, {
+        message: "El id no puede tener mas de 10 caracteres.",
+      }),
+    // Validaciones para el nombre
+    nombre: z
+      .string({ required_error: "Por favor ingrese un nombre" })
+      .min(1, {
+        message: "country must be at least 2 characters.",
+      })
+      .max(20, {
+        message: "El nombre no debe tener más de 20 caracteres",
+      }),
+    modelo: z.string().min(1).max(20),
+    fabricante: z.string().min(1).max(40),
+    velocidadpromedio: z.number().min(0),
+    cantidadcarga: z.number().min(0),
+    cantidadasientoscomerciales: z.number().min(0),
+    numeroasientospremium: z.number().min(0),
+    numeroasientoseconomicos: z.number().min(0),
+    cantidadasientosnocomerciales: z.number().min(0),
+    associatedAirline: z.string({
+      required_error: "Please select an airline.",
     }),
-  // Validaciones para el nombre
-  nombre: z
-    .string({ required_error: "Por favor ingrese un nombre" })
-    .min(1, {
-      message: "country must be at least 2 characters.",
-    })
-    .max(20, {
-      message: "El nombre no debe tener más de 20 caracteres",
-    }),
-  modelo: z.string().min(1).max(20),
-  fabricante: z.string().min(1).max(40),
-  velocidadpromedio: z.number().min(0),
-  cantidadcarga: z.number().min(0),
-  cantidadasientoscomerciales: z.number().min(0),
-  numeroasientospremium: z.number().min(0),
-  numeroasientoseconomicos: z.number().min(0),
-  cantidadasientosnocomerciales: z.number().min(0),
-  associatedAirline: z.string({
-    required_error: "Please select an airline.",
-  }),
-});
+  })
+  .refine((data) => data.numeroasientospremium + data.numeroasientoseconomicos === data.cantidadasientoscomerciales, {
+    message:
+      "El numero de asientos premium sumado al numero de asientos economicos debe ser igual a la cantidad de asientos comerciales",
+    path: ["cantidadasientoscomerciales"],
+  });
 
 export const CreatePlanes = () => {
   const { apiRequest } = useRequest();
+  const categorias = useGet("/FlyEaseApi/Categorias/GetAll");
   const { data, loading } = useGet("/FlyEaseApi/Aerolineas/GetAll");
+
+  const saveSeats = async (
+    categoriaNombre: string,
+    cantidad: number,
+    disponibilidad: boolean,
+    avion: Avion,
+    categorias: Categoria[],
+    contador: number | undefined
+  ) => {
+    const categoria = categorias.find((categoria) => categoria.nombre === categoriaNombre);
+    if (!categoria) return;
+
+    for (let i = 0; i < cantidad; i++) {
+      const seat: Asientos = {
+        categoria: categoria,
+        disponibilidad: disponibilidad,
+        avion: avion,
+        posicion: (contador ?? 0) + i + 1,
+      };
+
+      await apiRequest(seat, "/FlyEaseApi/Asientos/Post", "post");
+    }
+    return (contador ?? 0) + cantidad;
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,9 +155,43 @@ export const CreatePlanes = () => {
       aereolinea: (await apiRequest(null, `/FlyEaseApi/Aerolineas/GetById/${values.associatedAirline}`, "get")).apiData,
     };
 
-    console.log(planeData);
-    const example = await apiRequest(planeData, "/FlyEaseApi/Aviones/Post", "post");
-    console.log(example);
+    const planeDataWithDate = {
+      ...planeData,
+      fecharegistro: new Date(planeData.fecharegistro),
+    };
+
+    const request = await apiRequest(planeData, "/FlyEaseApi/Aviones/Post", "post");
+    if (!request.error) {
+
+      let contadorGeneral: number | undefined = 0;
+
+      contadorGeneral = await saveSeats(
+        "No comercial",
+        values.cantidadasientosnocomerciales,
+        true,
+        planeDataWithDate,
+        categorias.data.response,
+        contadorGeneral
+      );
+
+      contadorGeneral = await saveSeats(
+        "Primera clase",
+        values.numeroasientospremium,
+        true,
+        planeDataWithDate,
+        categorias.data.response,
+        contadorGeneral
+      );
+
+      saveSeats(
+        "Turista",
+        values.numeroasientoseconomicos,
+        true,
+        planeDataWithDate,
+        categorias.data.response,
+        contadorGeneral
+      );
+    }
   };
 
   const handleInputChange = (field: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
