@@ -37,6 +37,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 // 👇 Icons
 import { RefreshCcwDot } from "lucide-react";
+import { Estado, Vuelo } from "@/interfaces/tickets.interfaces";
 
 const formSchema = z
   .object({
@@ -56,6 +57,7 @@ const formSchema = z
     avion: z.string({
       required_error: "Seleccione un avión para el vuelo",
     }),
+    estado: z.string({}),
   })
   .refine((data) => data.arrivalAirport !== data.takeoffAirport, {
     message: "El aeropuerto de despegue no puede ser igual al de llegada.",
@@ -66,6 +68,7 @@ export const UpdateFlights = () => {
   const { data, loading, mutate } = useGet("/FlyEaseApi/Vuelos/GetAll");
   const airportsData = useGet("/FlyEaseApi/Aeropuertos/GetAll");
   const planesData = useGet("/FlyEaseApi/Aviones/GetAll");
+  const estadosData = useGet("/FlyEaseApi/Estados/GetAll");
   const [filter, setFilter] = useState("");
   const { apiRequest } = useRequest();
   let dataTable: string[] = [];
@@ -123,23 +126,23 @@ export const UpdateFlights = () => {
       aeropuerto_Destino: (
         await apiRequest(null, `/FlyEaseApi/Aeropuertos/GetById/${updatedFlight.arrivalAirport}`, "get")
       ).apiData,
-      estado: (await apiRequest(null, `/FlyEaseApi/Estados/GetById/8`, "get")).apiData,
+      estado: (await apiRequest(null, `/FlyEaseApi/Estados/GetById/${updatedFlight.estado}`, "get")).apiData,
     };
     const apidata = await apiRequest(flightData, `/FlyEaseApi/Vuelos/Put/${flight.idvuelo}`, "put");
     console.log(apidata);
     mutate();
   };
 
-  const handleRefreshClick = (flight: any) => {
-    console.log(flight);
-    form.setValue("precio", flight.precio);
+  const handleRefreshClick = (flight: Vuelo) => {
+    form.setValue("precio", flight.preciovuelo);
     form.setValue("descuento", flight.descuento);
     form.setValue("tarifa", flight.tarifatemporada);
     form.setValue("fechadesalida", new Date(flight.fechayhoradesalida));
-    form.setValue("horadesalida", new Date(flight.fechayhoradesalida).toLocaleTimeString().replace(/:/g, ''));
+    form.setValue("horadesalida", new Date(flight.fechayhoradesalida).toLocaleTimeString().replace(/:/g, ""));
     form.setValue("takeoffAirport", `${flight.aeropuerto_Despegue.idaereopuerto}`);
     form.setValue("arrivalAirport", `${flight.aeropuerto_Destino.idaereopuerto}`);
     form.setValue("avion", `${flight.avion.idavion}`);
+    form.setValue("estado", `${flight.estado.idestado}`);
   };
 
   const handleInputChange = (field: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -417,10 +420,44 @@ export const UpdateFlights = () => {
                           </FormItem>
                         )}
                       />
+                      {/* 👇 Espacio para el select del estado */}
+                      <FormField
+                        control={form.control}
+                        name="estado"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Estado del vuelo</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger className="w-[280px]">
+                                  <SelectValue placeholder="Seleccione una aeropuerto" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectLabel>Estados</SelectLabel>
+                                  {estadosData.data.response.length > 0 ? (
+                                    estadosData.data.response.map((estado: Estado) => {
+                                      return (
+                                        <SelectItem value={`${estado.idestado.toString()}`}>
+                                          {estado?.nombre}
+                                        </SelectItem>
+                                      );
+                                    })
+                                  ) : (
+                                    <div>No hay estados activos</div>
+                                  )}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                            <FormDescription>Seleccione el estado del vuelo.</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       <SheetFooter>
-                        <SheetClose asChild>
-                          <Button type="submit">Actualizar y finalizar</Button>
-                        </SheetClose>
+                        <Button type="submit">Actualizar y finalizar</Button>
+                        <SheetClose asChild></SheetClose>
                       </SheetFooter>
                     </form>
                   </Form>

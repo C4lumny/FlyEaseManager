@@ -3,9 +3,9 @@ import { useEffect } from "react";
 // 👇UI imports
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlanesCrudPage } from "./crudPage";
-import { RegionsPage } from "../regions/page";
-import { CitiesPage } from "../cities/page";
 import { AirlinesPage } from "../airlines/page";
+import { SeatsCategoryPage } from "../seatscategory/page";
+import { SeatsPage } from "../seats/page";
 
 export const PlanesPage = () => {
   const navigate = useNavigate();
@@ -37,11 +37,11 @@ export const PlanesPage = () => {
         </TabsContent>
         {/* 👇Contenido de asientos */}
         <TabsContent value="seats" className="space-y-4">
-          <RegionsPage />
+          <SeatsPage />
         </TabsContent>
         {/* 👇Contenido de Categoria asientos */}
         <TabsContent value="seatingCategory" className="space-y-4">
-          <CitiesPage />
+          <SeatsCategoryPage />
         </TabsContent>
       </Tabs>
     </>
