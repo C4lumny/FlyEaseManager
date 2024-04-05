@@ -10,6 +10,11 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Nav } from "@/components/nav";
 import { ModeToggle } from "@/components/mode-toggle";
+import { AirportsPage } from "./airports/page";
+import { FlightsPage } from "./flights/page";
+import { PlanesPage } from "./planes/page";
+import { TicketsPage } from "./tickets/page";
+import { CostumersPage } from "./costumers/page";
 
 export const Home = () => {
   const location = useLocation();
@@ -24,7 +29,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (user.username === "" && user.password === "") {
-      navigate('/login');
+      navigate("/");
     }
   }, [user, history]);
 
@@ -33,7 +38,7 @@ export const Home = () => {
       <div className="absolute right-4 top-4 md:right-8 md:top-8">
         <ModeToggle />
       </div>
-      <div className="col-span-1 flex flex-col">
+      <div className="h-screen w-64 fixed left-0 col-span-1 flex flex-col">
         {/* 👇 Logo del aplicativo */}
         <div className="mt-10">
           <img src={FlyEaseIcon} alt="" />
@@ -80,8 +85,8 @@ export const Home = () => {
               {
                 title: "Clientes",
                 icon: UserRoundPlus,
-                variant: currentPath === "/home/clients" ? "default" : "ghost",
-                link: "clients",
+                variant: currentPath === "/home/costumers" ? "default" : "ghost",
+                link: "costumers",
               },
             ]}
           />
@@ -89,7 +94,7 @@ export const Home = () => {
         {/* 👇 Logout */}
         <div className="mt-auto ml-2 mb-5 flex">
           <Button variant={"outline"} className="font-bold" onClick={handleChange}>
-          <LogOutIcon className="mr-2 size-4" />
+            <LogOutIcon className="mr-2 size-4" />
             Cerrar sesión
           </Button>
         </div>
@@ -97,12 +102,14 @@ export const Home = () => {
           <Separator orientation="vertical" />
         </div>
       </div>
-      <div className="ml-10 col-span-4">
+      <div className="ml-64 col-span-6 p-10">
         <Routes>
-          <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="flights" element={<DashboardPage />} />
-          <Route path="airports" element={<DashboardPage />} />
-          <Route path="airports" element={<DashboardPage />} />
+          <Route path="dashboard/*" element={<DashboardPage />} />
+          <Route path="flights/*" element={<FlightsPage />} />
+          <Route path="airports/*" element={<AirportsPage />} />
+          <Route path="planes/*" element={<PlanesPage />} />
+          <Route path="tickets/*" element={<TicketsPage />} />
+          <Route path="costumers/*" element={<CostumersPage />} />
         </Routes>
       </div>
     </div>

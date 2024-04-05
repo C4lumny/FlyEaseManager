@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const baseURL = "https://flyeasemanager.site"
+
 export const flyEaseApi = axios.create({
-  baseURL: "http://flyeaseapi-dev-env.eba-sbxyzdge.us-east-2.elasticbeanstalk.com/",
+  baseURL: "https://flyeasemanager.site/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -29,15 +31,16 @@ flyEaseApi.interceptors.response.use(
     // it means the token has expired and we need to refresh it
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
         const primaryToken = localStorage.getItem("primaryToken");
         const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post("/FlyEaseApi/Administradores/GetRefreshToken", {
+        const response = await axios.post(`${baseURL}/FlyEaseApi/Administradores/GetRefreshToken`, {
           expiredToken: primaryToken,
           refreshToken,
         });
-        const { tokens } = response.data;
+        const tokens = response.data.response.tokens;
+
+        console.log(tokens)
 
         localStorage.setItem("primaryToken", tokens.primaryToken);
         localStorage.setItem("refreshToken", tokens.refreshToken);
