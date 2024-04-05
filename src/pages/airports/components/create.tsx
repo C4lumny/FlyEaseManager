@@ -65,8 +65,7 @@ export const CreateAirports = () => {
       },
     };
 
-    const apiData = await apiRequest(cityData, "/FlyEaseApi/Aeropuertos/Post", "post");
-    console.log(apiData);
+    await apiRequest(cityData, "/FlyEaseApi/Aeropuertos/Post", "post");
   };
 
   const handleInputChange = (field: any) => (event: React.ChangeEvent<HTMLInputElement>) => {

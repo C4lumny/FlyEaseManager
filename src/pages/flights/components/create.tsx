@@ -69,7 +69,6 @@ export const CreateFlights = () => {
     let fechasalida = new Date(values.fechadesalida);
     let horadesalida = values.horadesalida.substring(0, 2);
     let minutosalida = values.horadesalida.substring(2, 4);
-    console.log(horadesalida, minutosalida);
 
     fechasalida.setHours(parseInt(horadesalida));
     fechasalida.setMinutes(parseInt(minutosalida));

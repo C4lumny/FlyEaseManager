@@ -38,7 +38,6 @@ export const DeleteAirport = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.idaereopuerto.toString().includes(filter));
   }
 

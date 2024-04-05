@@ -25,7 +25,6 @@ export const ViewAirports = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.idaereopuerto.toString().includes(filter));
   }
 

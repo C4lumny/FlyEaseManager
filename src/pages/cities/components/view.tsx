@@ -13,7 +13,6 @@ export const ViewCities = () => {
   const [filter, setFilter] = useState<string>("");
   let dataTable: string[] = [];
   let filteredData: string[] = [];
-  console.log(Image);
 
   if (!loading) {
     dataTable = data.response.map(
@@ -38,7 +37,6 @@ export const ViewCities = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.idciudad.toString().includes(filter));
   }
 

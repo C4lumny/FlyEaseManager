@@ -107,7 +107,6 @@ export const UpdateFlights = () => {
     let fechasalida = new Date(updatedFlight.fechadesalida);
     let horadesalida = updatedFlight.horadesalida.substring(0, 2);
     let minutosalida = updatedFlight.horadesalida.substring(2, 4);
-    console.log(horadesalida, minutosalida);
 
     fechasalida.setHours(parseInt(horadesalida));
     fechasalida.setMinutes(parseInt(minutosalida));
@@ -128,8 +127,7 @@ export const UpdateFlights = () => {
       ).apiData,
       estado: (await apiRequest(null, `/FlyEaseApi/Estados/GetById/${updatedFlight.estado}`, "get")).apiData,
     };
-    const apidata = await apiRequest(flightData, `/FlyEaseApi/Vuelos/Put/${flight.idvuelo}`, "put");
-    console.log(apidata);
+    await apiRequest(flightData, `/FlyEaseApi/Vuelos/Put/${flight.idvuelo}`, "put");
     mutate();
   };
 

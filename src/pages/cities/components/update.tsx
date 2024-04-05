@@ -82,13 +82,11 @@ export const UpdateCities = () => {
         },
       },
     };
-    const apidata = await apiRequest(cityToUpdate, `/FlyEaseApi/Ciudades/Put/${city.idciudad}`, "put");
-    console.log(apidata);
+    await apiRequest(cityToUpdate, `/FlyEaseApi/Ciudades/Put/${city.idciudad}`, "put");
     mutate();
   };
 
   const handleRefreshClick = (ciudad: any) => {
-    console.log(ciudad);
     form.setValue("nombre", ciudad.nombre);
     form.setValue(
       "associatedRegion",

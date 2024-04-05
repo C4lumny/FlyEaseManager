@@ -11,7 +11,6 @@ export const DashboardPage = () => {
   let yearlyTotalDifferencePercentage = 0;
 
   if (!loading && data) {
-    console.log(data);
     const boletos = (data as any).response;
     const añoActual = new Date().getFullYear();
     const añoAnterior = añoActual - 1;

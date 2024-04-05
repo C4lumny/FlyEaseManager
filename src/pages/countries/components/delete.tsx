@@ -18,7 +18,6 @@ export const DeleteCountry = () => {
   let filteredData: string[] = [];
 
   if (!loading) {
-    console.log(data.response);
     dataTable = data.response.map(
       (item: any) =>
         ({

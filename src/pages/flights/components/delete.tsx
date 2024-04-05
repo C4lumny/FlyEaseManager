@@ -28,7 +28,6 @@ export const DeleteFlight = () => {
   };
 
   if (!loading) {
-    console.log(data.response);
     dataTable = data.response.map(
       (item: any) =>
         ({
@@ -56,7 +55,6 @@ export const DeleteFlight = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.idvuelo.toString().includes(filter));
   }
 

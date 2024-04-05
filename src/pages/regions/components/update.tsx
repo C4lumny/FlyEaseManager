@@ -81,7 +81,6 @@ export const UpdateRegions = () => {
   };
 
   if (!loading) {
-    console.log(countriesData);
     dataTable = data.response.map(
       (item: any) =>
         ({

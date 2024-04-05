@@ -32,7 +32,6 @@ export const CreateRegions = () => {
       },
     };
     const apiData = await apiRequest(regionData, "/FlyEaseApi/Regiones/Post", "post");
-    console.log(apiData);
   };
 
   const formSchema = z.object({
@@ -50,10 +49,6 @@ export const CreateRegions = () => {
       nombre: "",
     },
   });
-
-  //   if (!loading) {
-  //     console.log(data.response);
-  //   }
 
   return (
     <>

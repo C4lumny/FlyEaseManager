@@ -50,7 +50,6 @@ export const DeleteCity = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.nombre.toString().includes(filter));
   }
 

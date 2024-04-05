@@ -14,7 +14,6 @@ export const ViewTickets = () => {
   let filteredData: string[] = [];
 
   if (!loading) {
-    console.log(data.response);
     dataTable = data.response.map(
       (item: Boletos) =>
         ({
@@ -32,7 +31,6 @@ export const ViewTickets = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.documento.toString().includes(filter));
   }
 
