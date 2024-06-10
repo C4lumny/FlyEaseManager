@@ -8,6 +8,18 @@ import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/viewTable";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export const DeleteFlight = () => {
   const { data, loading, mutate } = useGet("/FlyEaseApi/Vuelos/GetAll");
@@ -23,8 +35,14 @@ export const DeleteFlight = () => {
 
   const handleDeleteClick = async () => {
     const idvuelo = selectedFlight;
-    await apiRequest(null, `/FlyEaseApi/Vuelos/Delete/${idvuelo}`, "delete");
+    const response = await apiRequest(null, `/FlyEaseApi/Vuelos/Delete/${idvuelo}`, "delete");
     mutate();
+
+    if (!response.error) {
+      toast.success("Vuelo eliminado con exito");
+    } else {
+      toast.error("Error al eliminar el vuelo");
+    }
   };
 
   if (!loading) {
@@ -61,6 +79,7 @@ export const DeleteFlight = () => {
   }
 
   const columnTitles = [
+    "",
     "Id",
     "Precio",
     "Tarifa",
@@ -104,9 +123,26 @@ export const DeleteFlight = () => {
             <DataTable data={filteredData} columnTitles={columnTitles} />
           </div>
           <div className="mt-5 flex w-full justify-end">
-            <Button onClick={handleDeleteClick} variant="destructive">
-              Borrar vuelo
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button disabled={!selectedFlight} variant="destructive">
+                  Borrar vuelo
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>¿Estás seguro de borrar el vuelo?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta accion no puede ser revertida. Esto borrará permanentemente el vuelo y se removerá la
+                    información de nuestros servidores
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteClick}>Continuar</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       )}

@@ -4,14 +4,14 @@ import { App } from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import { UserProvider } from "./contexts/userProvider.tsx";
-import { Toaster } from "./components/ui/toaster.tsx";
+import { Toaster } from "@/components/ui/sonner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <UserProvider>
         <App />
-        <Toaster />
+        <Toaster richColors/>
       </UserProvider>
     </BrowserRouter>
   </React.StrictMode>

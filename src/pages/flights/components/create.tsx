@@ -24,6 +24,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Icons } from "@/components/ui/icons";
 
 const formSchema = z
   .object({
@@ -54,6 +57,7 @@ export const CreateFlights = () => {
   const airportsData = useGet("/FlyEaseApi/Aeropuertos/GetAll");
   const planesData = useGet("/FlyEaseApi/Aviones/GetAll");
   const loading = planesData && airportsData;
+  const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,10 +66,15 @@ export const CreateFlights = () => {
       descuento: 0,
       fechadesalida: new Date(),
       tarifa: 0,
+      horadesalida: "",
+      takeoffAirport: "",
+      arrivalAirport: "",
+      avion: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsResponseLoading(true);
     let fechasalida = new Date(values.fechadesalida);
     let horadesalida = values.horadesalida.substring(0, 2);
     let minutosalida = values.horadesalida.substring(2, 4);
@@ -90,7 +99,17 @@ export const CreateFlights = () => {
       ).apiData,
       estado: (await apiRequest(null, `/FlyEaseApi/Estados/GetById/8`, "get")).apiData,
     };
-    await apiRequest(flightData, "/FlyEaseApi/Vuelos/Post", "post");
+
+    const response = await apiRequest(flightData, "/FlyEaseApi/Vuelos/Post", "post");
+
+    if (!response.error) {
+      setIsResponseLoading(false);
+      toast.success("Vuelo creado con exito");
+      form.reset();
+    } else {
+      setIsResponseLoading(false);
+      toast.error("Error al crear el vuelo", {});
+    }
   };
 
   const handleInputChange = (field: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -387,7 +406,9 @@ export const CreateFlights = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Crear</Button>
+              <Button type="submit" disabled={isResponseLoading}>
+                {isResponseLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}Crear
+              </Button>
             </form>
           </Form>
         </>
