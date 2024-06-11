@@ -3,11 +3,23 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/viewTable";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { TableSkeleton } from "@/components/table-skeleton";
 
 export const DeleteFlight = () => {
   const { data, loading, mutate } = useGet("/FlyEaseApi/Vuelos/GetAll");
@@ -23,8 +35,14 @@ export const DeleteFlight = () => {
 
   const handleDeleteClick = async () => {
     const idvuelo = selectedFlight;
-    await apiRequest(null, `/FlyEaseApi/Vuelos/Delete/${idvuelo}`, "delete");
+    const response = await apiRequest(null, `/FlyEaseApi/Vuelos/Delete/${idvuelo}`, "delete");
     mutate();
+
+    if (!response.error) {
+      toast.success("Vuelo eliminado con exito");
+    } else {
+      toast.error("Error al eliminar el vuelo");
+    }
   };
 
   if (!loading) {
@@ -59,6 +77,7 @@ export const DeleteFlight = () => {
   }
 
   const columnTitles = [
+    "",
     "Id",
     "Precio",
     "Tarifa",
@@ -81,13 +100,7 @@ export const DeleteFlight = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div>
           <div>
@@ -102,9 +115,26 @@ export const DeleteFlight = () => {
             <DataTable data={filteredData} columnTitles={columnTitles} />
           </div>
           <div className="mt-5 flex w-full justify-end">
-            <Button onClick={handleDeleteClick} variant="destructive">
-              Borrar vuelo
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button disabled={!selectedFlight} variant="destructive">
+                  Borrar vuelo
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>¿Estás seguro de borrar el vuelo?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta accion no puede ser revertida. Esto borrará permanentemente el vuelo y se removerá la
+                    información de nuestros servidores
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteClick}>Continuar</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       )}

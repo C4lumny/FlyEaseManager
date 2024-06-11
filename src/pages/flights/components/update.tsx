@@ -9,7 +9,6 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -38,6 +37,8 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/comp
 // 👇 Icons
 import { RefreshCcwDot } from "lucide-react";
 import { Estado, Vuelo } from "@/interfaces/tickets.interfaces";
+import { toast } from "sonner";
+import { TableSkeleton } from "@/components/table-skeleton";
 
 const formSchema = z
   .object({
@@ -127,7 +128,13 @@ export const UpdateFlights = () => {
       ).apiData,
       estado: (await apiRequest(null, `/FlyEaseApi/Estados/GetById/${updatedFlight.estado}`, "get")).apiData,
     };
-    await apiRequest(flightData, `/FlyEaseApi/Vuelos/Put/${flight.idvuelo}`, "put");
+    const response = await apiRequest(flightData, `/FlyEaseApi/Vuelos/Put/${flight.idvuelo}`, "put");
+
+    if (!response.error) {
+      toast.success("Vuelo actualizado correctamente");
+    } else {
+      toast.error("Error al actualizar el vuelo");
+    }
     mutate();
   };
 
@@ -471,13 +478,7 @@ export const UpdateFlights = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>

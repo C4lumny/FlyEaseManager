@@ -18,6 +18,7 @@ import {
   SelectLabel,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 export const CreateRegions = () => {
   const { apiRequest } = useRequest();
@@ -31,7 +32,13 @@ export const CreateRegions = () => {
         nombre: values.associatedCountry.split(",")[1],
       },
     };
-    await apiRequest(regionData, "/FlyEaseApi/Regiones/Post", "post");
+    const response= await apiRequest(regionData, "/FlyEaseApi/Regiones/Post", "post");
+    if (!response.error) {
+      toast.success("Región creada con exito");
+      form.reset();
+    } else {
+      toast.error("Error al crear la región", {});
+    }
   };
 
   const formSchema = z.object({
@@ -47,6 +54,7 @@ export const CreateRegions = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       nombre: "",
+      associatedCountry: "",
     },
   });
 
