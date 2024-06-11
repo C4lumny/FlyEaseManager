@@ -20,13 +20,13 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Icons } from "@/components/ui/icons";
+import { FormSkeleton } from "@/components/form-skeleton";
 
 const formSchema = z
   .object({
@@ -129,13 +129,7 @@ export const CreateFlights = () => {
   return (
     <>
       {loading.loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <FormSkeleton />
       ) : (
         <>
           <div>
