@@ -16,7 +16,7 @@ const MostPopularDestinations = ({ data }:any) => {
         nameKey="destination"
         label={({ destination }) => destination}
       >
-        {data.map((entry: any, index: any) => (
+        {data.map((index: any) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
       </Pie>
