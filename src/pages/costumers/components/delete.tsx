@@ -59,7 +59,6 @@ export const DeleteCostumers = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((costumer: any) => costumer.nombre.toLowerCase().includes(filter.toLowerCase()));
   }
 

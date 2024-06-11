@@ -46,9 +46,7 @@ export const CreateAirlines = () => {
       codigoicao: values.codigoicao,
     };
 
-    console.log(airlineData);
-    const example = await apiRequest(airlineData, "/FlyEaseApi/Aerolineas/Post", "post");
-    console.log(example);
+    await apiRequest(airlineData, "/FlyEaseApi/Aerolineas/Post", "post");
   };
 
   return (

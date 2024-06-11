@@ -18,7 +18,6 @@ export const DeleteRegion = () => {
   let filteredData: string[] = [];
 
   if (!loading) {
-    console.log(data.response);
     dataTable = data.response.map(
       (item: any) =>
         ({

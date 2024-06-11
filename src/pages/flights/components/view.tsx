@@ -13,7 +13,6 @@ export const ViewFlights = () => {
   let filteredData: string[] = [];
 
   if (!loading) {
-    console.log(data.response);
     dataTable = data.response.map(
       (item: any) =>
         ({
@@ -33,7 +32,6 @@ export const ViewFlights = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.idvuelo.toString().includes(filter));
   }
 

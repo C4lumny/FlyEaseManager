@@ -36,7 +36,6 @@ export const ViewCostumers = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.nombre.toLowerCase().includes(filter.toLowerCase()));
   }
 

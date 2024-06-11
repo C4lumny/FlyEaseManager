@@ -108,7 +108,6 @@ export const UpdateFlights = () => {
     let fechasalida = new Date(updatedFlight.fechadesalida);
     let horadesalida = updatedFlight.horadesalida.substring(0, 2);
     let minutosalida = updatedFlight.horadesalida.substring(2, 4);
-    console.log(horadesalida, minutosalida);
 
     fechasalida.setHours(parseInt(horadesalida));
     fechasalida.setMinutes(parseInt(minutosalida));
@@ -136,7 +135,6 @@ export const UpdateFlights = () => {
     } else {
       toast.error("Error al actualizar el vuelo");
     }
-
     mutate();
   };
 

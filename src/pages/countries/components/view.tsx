@@ -13,7 +13,6 @@ export const ViewCountries = () => {
   let filteredData: string[] = [];
 
   if (!loading) {
-    console.log(data.response);
     dataTable = data.response.map(
       (item: any) =>
         ({
@@ -23,7 +22,6 @@ export const ViewCountries = () => {
         } || [])
     );
 
-    console.log(dataTable);
     filteredData = dataTable.filter((item: any) => item.idpais.toString().includes(filter));
   }
 
@@ -51,12 +49,7 @@ export const ViewCountries = () => {
           </div>
           <Separator className="my-5" />
           <div className="flex items-center py-4">
-            <Input
-              placeholder="Filtrar por id..."
-              className="max-w-sm"
-              value={filter}
-              onChange={handleFilterChange}
-            />
+            <Input placeholder="Filtrar por id..." className="max-w-sm" value={filter} onChange={handleFilterChange} />
           </div>
           <div className="rounded-md border">
             <DataTable data={filteredData} columnTitles={columnTitles} />

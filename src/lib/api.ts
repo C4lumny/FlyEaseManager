@@ -43,8 +43,6 @@ flyEaseApi.interceptors.response.use(
         });
         const tokens = response.data.response.tokens;
 
-        console.log(tokens)
-
         localStorage.setItem("primaryToken", tokens.primaryToken);
         localStorage.setItem("refreshToken", tokens.refreshToken);
 

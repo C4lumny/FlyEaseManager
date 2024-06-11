@@ -111,13 +111,11 @@ export const UpdatePlanes = () => {
       aereolinea: (await apiRequest(null, `/FlyEaseApi/Aerolineas/GetById/${updatedPlane.associatedAirline}`, "get"))
         .apiData,
     };
-    const apidata = await apiRequest(planeToUpdate, `/FlyEaseApi/Aviones/Put/${plane.idavion}`, "put");
-    console.log(apidata);
+    await apiRequest(planeToUpdate, `/FlyEaseApi/Aviones/Put/${plane.idavion}`, "put");
     mutate();
   };
 
   const handleRefreshClick = (plane: any) => {
-    console.log(plane);
     form.setValue("idavion", plane.idavion);
     form.setValue("nombre", plane.nombre);
     form.setValue("modelo", plane.modelo);

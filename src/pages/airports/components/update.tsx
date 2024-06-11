@@ -86,13 +86,11 @@ export const UpdateAirports = () => {
         latitud: updatedAirport.latitud,
       },
     };
-    const apidata = await apiRequest(airportToUpdate, `/FlyEaseApi/Aeropuertos/Put/${airport.idaereopuerto}`, "put");
-    console.log(apidata);
+    await apiRequest(airportToUpdate, `/FlyEaseApi/Aeropuertos/Put/${airport.idaereopuerto}`, "put");
     mutate();
   };
 
   const handleRefreshClick = (airport: any) => {
-    console.log(airport);
     form.setValue("nombre", airport.nombre);
     form.setValue("longitud", airport.coordenadas.longitud);
     form.setValue("latitud", airport.coordenadas.latitud);

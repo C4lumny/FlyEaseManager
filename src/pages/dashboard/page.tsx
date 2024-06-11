@@ -27,6 +27,7 @@ export const DashboardPage = () => {
 
   if (!ticketsLoading && ticketsData) {
     const boletos = (ticketsData as any).response;
+
     const añoActual = new Date().getFullYear();
     const añoAnterior = añoActual - 1;
 
