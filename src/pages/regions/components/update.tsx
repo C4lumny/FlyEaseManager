@@ -6,7 +6,6 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -31,9 +30,11 @@ import {
 // 👇 Icons
 import { RefreshCcwDot } from "lucide-react";
 import { DataTable } from "@/components/viewTable";
+import { TableSkeleton } from "@/components/table-skeleton";
+import { toast } from "sonner";
 
 export const UpdateRegions = () => {
-  const { data, loading } = useGet("/FlyEaseApi/Regiones/GetAll");
+  const { data, loading, mutate } = useGet("/FlyEaseApi/Regiones/GetAll");
   const countriesData = useGet("/FlyEaseApi/Paises/GetAll");
   const [filter, setFilter] = useState("");
   const { apiRequest } = useRequest();
@@ -72,7 +73,14 @@ export const UpdateRegions = () => {
         fecharegistro: region.pais.fecharegistro,
       },
     };
-    await apiRequest(regionToUpdate, `/FlyEaseApi/Regiones/Put/${region.idregion}`, "put");
+    const response = await apiRequest(regionToUpdate, `/FlyEaseApi/Regiones/Put/${region.idregion}`, "put");
+
+    if (!response.error) {
+      toast.success("Región actualizado correctamente");
+    } else {
+      toast.error("Error al actualizar el región");
+    }
+    mutate();
   };
 
   const handleRefreshClick = (region: any) => {
@@ -172,13 +180,7 @@ export const UpdateRegions = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>

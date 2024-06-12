@@ -17,7 +17,10 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Icons } from "@/components/ui/icons";
+import { FormSkeleton } from "@/components/form-skeleton";
 
 export interface Asientos {
   idasiento?: number;
@@ -100,6 +103,7 @@ export const CreatePlanes = () => {
   const { apiRequest } = useRequest();
   const categorias = useGet("/FlyEaseApi/Categorias/GetAll");
   const { data, loading } = useGet("/FlyEaseApi/Aerolineas/GetAll");
+  const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
 
   const saveSeats = async (
     categoriaNombre: string,
@@ -143,6 +147,7 @@ export const CreatePlanes = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsResponseLoading(true);
     const planeData = {
       idavion: values.idavion,
       nombre: values.nombre,
@@ -192,6 +197,15 @@ export const CreatePlanes = () => {
         contadorGeneral
       );
     }
+
+    if (!request.error) {
+      setIsResponseLoading(false);
+      toast.success("Avión creado con éxito");
+      form.reset();
+    } else {
+      setIsResponseLoading(false);
+      toast.error("Error al crear el avión", {});
+    }
   };
 
   const handleInputChange = (field: any) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,13 +225,7 @@ export const CreatePlanes = () => {
   return (
     <>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <FormSkeleton />
       ) : (
         <>
           <div>
@@ -442,7 +450,9 @@ export const CreatePlanes = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isResponseLoading}>
+                {isResponseLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}Crear
+              </Button>
             </form>
           </Form>
         </>

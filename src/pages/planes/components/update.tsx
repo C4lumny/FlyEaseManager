@@ -6,7 +6,6 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -31,6 +30,8 @@ import {
 // 👇 Icons
 import { RefreshCcwDot } from "lucide-react";
 import { DataTable } from "@/components/viewTable";
+import { toast } from "sonner";
+import { TableSkeleton } from "@/components/table-skeleton";
 
 const formSchema = z.object({
   // Validaciones para el id
@@ -111,7 +112,12 @@ export const UpdatePlanes = () => {
       aereolinea: (await apiRequest(null, `/FlyEaseApi/Aerolineas/GetById/${updatedPlane.associatedAirline}`, "get"))
         .apiData,
     };
-    await apiRequest(planeToUpdate, `/FlyEaseApi/Aviones/Put/${plane.idavion}`, "put");
+    const response = await apiRequest(planeToUpdate, `/FlyEaseApi/Aviones/Put/${plane.idavion}`, "put");
+    if (!response.error) {
+      toast.success("Avión actualizado correctamente");
+    } else {
+      toast.error("Error al actualizar el avión");
+    }
     mutate();
   };
 
@@ -343,13 +349,7 @@ export const UpdatePlanes = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>

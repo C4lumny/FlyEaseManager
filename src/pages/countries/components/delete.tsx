@@ -3,11 +3,12 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/viewTable";
+import { TableSkeleton } from "@/components/table-skeleton";
+import { toast } from "sonner";
 
 export const DeleteCountry = () => {
   const { data, loading, mutate } = useGet("/FlyEaseApi/Paises/GetAll");
@@ -49,20 +50,19 @@ export const DeleteCountry = () => {
 
   const handleDeleteClick = async () => {
     const idregion = selectedCountry;
-    await apiRequest(null, `/FlyEaseApi/Paises/Delete/${idregion}`, "delete");
+    const response = await apiRequest(null, `/FlyEaseApi/Paises/Delete/${idregion}`, "delete");
     mutate();
+    if (!response.error) {
+      toast.success("País eliminado con éxito");
+    } else {
+      toast.error("Error al eliminar el país");
+    }
   };
 
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>

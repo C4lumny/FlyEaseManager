@@ -3,13 +3,14 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/viewTable";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Image } from "lucide-react";
+import { TableSkeleton } from "@/components/table-skeleton";
+import { toast } from "sonner";
 
 export const DeleteCity = () => {
   const { data, loading, mutate } = useGet("/FlyEaseApi/Ciudades/GetAll");
@@ -65,8 +66,14 @@ export const DeleteCity = () => {
 
   const handleDeleteClick = async () => {
     const idciudad = selectedCity;
-    await apiRequest(null, `/FlyEaseApi/Ciudades/Delete/${idciudad}`, "delete");
+    const response = await apiRequest(null, `/FlyEaseApi/Ciudades/Delete/${idciudad}`, "delete");
     mutate();
+
+    if (!response.error) {
+      toast.success("Ciudad eliminada con exito");
+    } else {
+      toast.error("Error al eliminar el ciudad");
+    }
   };
 
   //TODO: implementar un toaster (se encuentra en shadcn-ui) para mostrar un mensaje de exito o error al eliminar una region, y actualizar la tabla de regiones despues de eliminar una region
@@ -74,13 +81,7 @@ export const DeleteCity = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>
