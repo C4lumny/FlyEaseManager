@@ -4,7 +4,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 export const FlightsPerYear = ({ flights }: any) => {
   const data = useMemo(() => {
     const flightsPerMonth = Array.from({ length: 12 }, (_, i) => ({
-      Meses: new Date(0, i).toLocaleString("es-ES", { month: "long" }),
+      Meses: new Date(0, i).toLocaleString("es-ES", { month: "short" }),
       Vuelos: 0,
     }));
 
