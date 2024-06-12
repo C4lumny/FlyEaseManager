@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Icons } from "@/components/ui/icons";
 import { useGet } from "@/hooks/useGet";
@@ -96,7 +96,7 @@ export const DashboardPage = () => {
         <DashboardSkeleton />
       ) : (
         <div className="hidden flex-col md:flex">
-          <div className="flex-1 space-y-4 mt-10 p-8 pt-6">
+          <div className="flex-1 space-y-4 p-8 pt-6">
             <div className="flex items-center justify-between space-y-10">
               <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
             </div>
@@ -220,7 +220,7 @@ export const DashboardPage = () => {
                   <Card className="col-span-3">
                     <CardHeader>
                       <CardTitle>Destinos más populares</CardTitle>
-                      <CardDescription>You made 265 sales this month.</CardDescription>
+                      
                     </CardHeader>
                     <CardContent>
                       <MostPopularDestinations data={popularDestinations} />

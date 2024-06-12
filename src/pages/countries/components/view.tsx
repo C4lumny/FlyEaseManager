@@ -2,9 +2,9 @@ import { ChangeEvent, useState } from "react";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/viewTable";
+import { TableSkeleton } from "@/components/table-skeleton";
 
 export const ViewCountries = () => {
   const { data, loading } = useGet("/FlyEaseApi/Paises/GetAll");
@@ -34,13 +34,7 @@ export const ViewCountries = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div>
           <div>

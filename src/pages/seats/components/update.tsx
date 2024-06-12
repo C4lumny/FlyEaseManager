@@ -6,7 +6,6 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
@@ -32,6 +31,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 // 👇 Icons
 import { RefreshCcwDot } from "lucide-react";
 import { DataTable } from "@/components/viewTable";
+import { toast } from "sonner";
+import { TableSkeleton } from "@/components/table-skeleton";
 
 // Interfaces
 interface Asientos {
@@ -119,7 +120,7 @@ export const UpdateSeats = () => {
       },
     };
 
-    await apiRequest(seatToUpdate, `/FlyEaseApi/Asientos/Put/${seat.idasiento}`, "put");
+    const response = await apiRequest(seatToUpdate, `/FlyEaseApi/Asientos/Put/${seat.idasiento}`, "put");
 
     // Si el asiento pasa de comercial a no comercial, restar un pasajero al avión
     if (!seatToUpdate.categoria.comercial && seat.categoria.comercial) {
@@ -132,7 +133,12 @@ export const UpdateSeats = () => {
     }
 
     await apiRequest(plane, `/FlyEaseApi/Aviones/Put/${plane.idavion}`, "put");
-
+    
+    if (!response.error) {
+      toast.success("Asiento actualizado correctamente");
+    } else {
+      toast.error("Error al actualizar el asiento");
+    }
     mutate();
   };
 
@@ -237,13 +243,7 @@ export const UpdateSeats = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>

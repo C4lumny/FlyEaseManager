@@ -17,7 +17,10 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Icons } from "@/components/ui/icons";
+import { FormSkeleton } from "@/components/form-skeleton";
 
 const formSchema = z.object({
   nombre: z.string().min(2, {
@@ -35,6 +38,7 @@ const formSchema = z.object({
 export const CreateCities = () => {
   const { apiRequest } = useRequest();
   const { data, loading } = useGet("/FlyEaseApi/Regiones/GetAll");
+  const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,6 +50,7 @@ export const CreateCities = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsResponseLoading(true);
     const cityData = {
       nombre: values.nombre,
       imagen: values.imagen,
@@ -58,19 +63,22 @@ export const CreateCities = () => {
         },
       },
     };
-    await apiRequest(cityData, "/FlyEaseApi/Ciudades/Post", "post");
+    const response = await apiRequest(cityData, "/FlyEaseApi/Ciudades/Post", "post");
+
+    if (!response.error) {
+      setIsResponseLoading(false);
+      toast.success("Ciudad creada con éxito");
+      form.reset();
+    } else {
+      setIsResponseLoading(false);
+      toast.error("Error al crear la ciudad", {});
+    }
   };
 
   return (
     <>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <FormSkeleton />
       ) : (
         <>
           <div>
@@ -169,7 +177,9 @@ export const CreateCities = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+               <Button type="submit" disabled={isResponseLoading}>
+                {isResponseLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}Crear
+              </Button>
             </form>
           </Form>
         </>

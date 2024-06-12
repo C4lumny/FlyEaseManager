@@ -3,7 +3,6 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { TableSkeleton } from "@/components/table-skeleton";
 
 export interface Clientes {
   numerodocumento: string;
@@ -81,20 +82,20 @@ export const DeleteCostumers = () => {
   };
 
   const handleDeleteClick = async () => {
-    await apiRequest(null, `/FlyEaseApi/Clientes/Delete/${selectedCostumer?.numerodocumento}`, "delete");
+    const response = await apiRequest(null, `/FlyEaseApi/Clientes/Delete/${selectedCostumer?.numerodocumento}`, "delete");
     mutate();
+
+    if (!response.error) {
+      toast.success("Cliente eliminado con exito");
+    } else {
+      toast.error("Error al eliminar el cliente");
+    }
   };
 
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>
@@ -116,13 +117,13 @@ export const DeleteCostumers = () => {
           <div className="flex w-full justify-end">
             <AlertDialog>
               <AlertDialogTrigger>
-                <Button variant="destructive">Borrar asiento</Button>
+                <Button variant="destructive">Borrar cliente</Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>¿Seguro que quieres borrar el asiento?</AlertDialogTitle>
+                  <AlertDialogTitle>¿Seguro que quieres borrar el cliente?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Ten en cuenta que se eliminará el ultimo asiento del avión seleccionado!
+                    Ten en cuenta que se eliminará el cliente seleccionado!
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

@@ -17,14 +17,18 @@ import {
   SelectGroup,
   SelectLabel,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { FormSkeleton } from "@/components/form-skeleton";
+import { useState } from "react";
+import { Icons } from "@/components/ui/icons";
 
 export const CreateRegions = () => {
   const { apiRequest } = useRequest();
   const { data, loading } = useGet("/FlyEaseApi/Paises/GetAll");
+  const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsResponseLoading(true);
     const regionData = {
       nombre: values.nombre,
       pais: {
@@ -61,13 +65,7 @@ export const CreateRegions = () => {
   return (
     <>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <FormSkeleton />
       ) : (
         <>
           <div>
@@ -127,7 +125,9 @@ export const CreateRegions = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isResponseLoading}>
+                {isResponseLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}Crear
+              </Button>
             </form>
           </Form>
         </>

@@ -3,7 +3,6 @@ import { useRequest } from "@/hooks/useApiRequest";
 // 👇 UI imports
 import { Separator } from "@/components/ui/separator";
 import { useGet } from "@/hooks/useGet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { TableSkeleton } from "@/components/table-skeleton";
+import { toast } from "sonner";
 
 export interface Asientos {
   idasiento: number;
@@ -112,20 +113,20 @@ export const DeleteSeat = () => {
       plane.cantidadpasajeros -= 1;
     }
 
-    await apiRequest(plane, `/FlyEaseApi/Aviones/Put/${plane.idavion}`, "put");
+    const response = await apiRequest(plane, `/FlyEaseApi/Aviones/Put/${plane.idavion}`, "put");
     mutate();
+
+    if (!response.error) {
+      toast.success("Asiento eliminado con éxito");
+    } else {
+      toast.error("Error al eliminar el asiento");
+    }
   };
 
   return (
     <div>
       {loading ? (
-        <div className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
+        <TableSkeleton />
       ) : (
         <div className="space-y-5">
           <div>

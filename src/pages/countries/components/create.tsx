@@ -6,6 +6,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRequest } from "@/hooks/useApiRequest";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Icons } from "@/components/ui/icons";
 
 const formSchema = z.object({
   nombre: z.string().min(2, {
@@ -15,9 +18,20 @@ const formSchema = z.object({
 
 export const CreateCountries = () => {
   const { apiRequest } = useRequest();
+  const [isResponseLoading, setIsResponseLoading] = useState<boolean>(false);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await apiRequest(values, "/FlyEaseApi/Paises/Post", "post");
+    setIsResponseLoading(true);
+    const response = await apiRequest(values, "/FlyEaseApi/Paises/Post", "post");
+
+    if (!response.error) {
+      setIsResponseLoading(false);
+      toast.success("País creado con exito");
+      form.reset();
+    } else {
+      setIsResponseLoading(false);
+      toast.error("Error al crear el país", {});
+    }
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,7 +65,9 @@ export const CreateCountries = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Crear</Button>
+          <Button type="submit" disabled={isResponseLoading}>
+                {isResponseLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}Crear
+              </Button>
         </form>
       </Form>
     </>
